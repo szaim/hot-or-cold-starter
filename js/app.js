@@ -14,19 +14,20 @@ $(document).ready(function(){
 
 
 		// Adds guess number to list
+  
+    var secretNumber;
   	var count = 10;
 		var guessNum;
+    generateNumber();
     var gameOn = function(e){
       e.preventDefault();
       guessNum = $("#userGuess").val();
       console.log("this is your guessNum: " + guessNum);
-   
         if (--count){
           if (guessNum > 0 && guessNum <= 100){
               $("#guessList").append("<li>" + guessNum + "</li>");
               $("#count").text(10-count);  
           }else {alert("this Number is not valid!")};
-     
         }else{
           //alert("Sorry you hit the Max :(");
           $("form").off("submit", gameOn);
@@ -52,40 +53,60 @@ $(document).ready(function(){
         $("#feedback").text("Hot");
       } else if (guessNum >= 1 && guessNum < 10){
         $("#feedback").text("Very Hot");
-      }else if (guessNum === randomN){
-        $("feedback").text("Yaaaaay you Rock!");
       }
 
+      // $("form").off("submit", gameOn);
 
     }
+
+    $(".new").click(function(e) {
+      e.preventDefault;
+      generateNumber();
+      $("form").off("submit", gameOn);
+      newGame();
+      getNum();
+    });
+
+
     function gameOff(e){
       alert("Sorry you hit the Max :(");
       e.preventDefault();
     }
 
+    function generateNumber(){
+      secretNumber =  Math.floor(Math.random() * 100) + 1;
+      console.log("secretNumber is: " + secretNumber);
+    }
+
   	$("form").submit(gameOn);
-
-
+    function getNum(){
+      $("form").submit(function(){
+        if(guessNum == secretNumber){
+          $("#feedback").text("Yayy you get it :)");
+          $("form").off("submit", gameOn);
+         }
+      });
+    }
+    getNum();
   	// this function will generate the random number that we invoke in the submit
+   //  function generateNumber(){
+   //     secretNumber = Math.floor(Math.random() * 100) + 1;
+   // }
 
-  function randomNum(){
-    var random = Math.floor((Math.random() * 100) + 1);
-    console.log("the Random Number is = " + random);
-    return random;
-  }
-  var randomN = randomNum();
 
-    $(".new").click(function(){
+
+    function newGame(){
       count = 10;
       $("#count").text(0);
       $("form")[0].reset();
       $("#guessList").empty();
       $("#feedback").text("Make your Guess!");
-      randomN = randomNum();
       $("form").on("submit", gameOn);
       $("form").off("submit", gameOff);
+      
+    }
 
-    });
- 
+
+
 
 });
